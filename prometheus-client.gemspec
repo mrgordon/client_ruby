@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'prometheus/client/version'
 
@@ -16,4 +15,5 @@ Gem::Specification.new do |s|
   s.require_paths     = ['lib']
 
   s.add_dependency 'quantile', '~> 0.2.0'
+  s.add_dependency 'mmap2'
 end
