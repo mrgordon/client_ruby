@@ -23,7 +23,7 @@ output of `/metrics` and terminate.
 Start a Prometheus server with the provided config:
 
 ```bash
-prometheus -config.file ./prometheus.yaml
+prometheus -config.file ./prometheus.yml
 ```
 
 In another terminal, start the application server:
@@ -52,9 +52,11 @@ use Prometheus::Middleware::Collector, counter_label_builder: ->(env, code) {
   {
     code:         code,
     method:       env['REQUEST_METHOD'].downcase,
+    # Include the HTTP Host header as label.
     host:         env['HTTP_HOST'].to_s,
-    path:         env['PATH_INFO'].to_s,
-    http_version: env['HTTP_VERSION'].to_s,
+    # Include path, but replace all numeric IDs to keep cardinality low.
+    # Think '/users/1234/comments' -> '/users/:id/comments'
+    path:         env['PATH_INFO'].to_s.gsub(/\/\d+(\/|$)/, '/:id\\1'),
   }
 }
 ```
