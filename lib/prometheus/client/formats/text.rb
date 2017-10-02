@@ -160,7 +160,7 @@ module Prometheus
 
             l = labels(set)
             yield metric("#{name}_sum", l, value.get.sum)
-            yield metric("#{name}_count", l, value.get.total)
+            yield metric("#{name}_count", l, value.total)
           end
 
           def histogram(name, set, value)
@@ -168,11 +168,11 @@ module Prometheus
             value.get.each do |q, v|
               yield metric(bucket, labels(set.merge(le: q)), v)
             end
-            yield metric(bucket, labels(set.merge(le: '+Inf')), value.get.total)
+            yield metric(bucket, labels(set.merge(le: '+Inf')), value.total)
 
             l = labels(set)
             yield metric("#{name}_sum", l, value.get.sum)
-            yield metric("#{name}_count", l, value.get.total)
+            yield metric("#{name}_count", l, value.total)
           end
 
           def metric(name, labels, value)
