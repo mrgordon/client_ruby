@@ -39,7 +39,7 @@ module Prometheus
 
       def init_cpu_metrics
         @cpu_load_gauge = Prometheus::Client::Gauge.new(:cpu_load, 'Current CPU Load')
-        @registry.register($cpu_load_gauge)
+        @registry.register(@cpu_load_gauge)
       end
 
       def instrument_cpu
