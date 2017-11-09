@@ -22,6 +22,7 @@ module Prometheus
         @registry = options[:registry] || Client.registry
         @path = options[:path] || '/metrics'
         @acceptable = build_dictionary(FORMATS, FALLBACK)
+        init_cpu_metrics
       end
 
       def call(env)
@@ -35,6 +36,11 @@ module Prometheus
       end
 
       private
+
+      def init_cpu_metrics
+        $cpu_load_gauge = Prometheus::Client::Gauge.new(:cpu_load, 'Current CPU Load')
+        @registry.register($cpu_load_gauge)
+      end
 
       def instrument_cpu
         $cpu_load_gauge.set({ 'load_avg': '1_min' }, Sys::CPU.load_avg.first)
