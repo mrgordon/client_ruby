@@ -12,7 +12,7 @@ module Prometheus
     # under `/metrics`. Use the `:registry` and `:path` options to change the
     # defaults.
     class Exporter
-      attr_reader :app, :registry, :path
+      attr_reader :app, :registry, :path, :cpu_load_gauge
 
       FORMATS  = [Client::Formats::Text].freeze
       FALLBACK = Client::Formats::Text
@@ -38,14 +38,14 @@ module Prometheus
       private
 
       def init_cpu_metrics
-        cpu_load_gauge = Prometheus::Client::Gauge.new(:cpu_load, 'Current CPU Load')
+        @cpu_load_gauge = Prometheus::Client::Gauge.new(:cpu_load, 'Current CPU Load')
         @registry.register($cpu_load_gauge)
       end
 
       def instrument_cpu
-        cpu_load_gauge.set({ 'load_avg': '1_min' }, Sys::CPU.load_avg[0])
-        cpu_load_gauge.set({ 'load_avg': '5_min' }, Sys::CPU.load_avg[1])
-        cpu_load_gauge.set({ 'load_avg': '15_min' }, Sys::CPU.load_avg[2])
+        @cpu_load_gauge.set({ 'load_avg': '1_min' }, Sys::CPU.load_avg[0])
+        @cpu_load_gauge.set({ 'load_avg': '5_min' }, Sys::CPU.load_avg[1])
+        @cpu_load_gauge.set({ 'load_avg': '15_min' }, Sys::CPU.load_avg[2])
       end
 
       def negotiate(env, formats)
