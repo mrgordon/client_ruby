@@ -26,6 +26,7 @@ module Prometheus
 
       def call(env)
         if env['PATH_INFO'] == @path
+          instrument_cpu
           format = negotiate(env, @acceptable)
           format ? respond_with(format) : not_acceptable(FORMATS)
         else
@@ -34,6 +35,12 @@ module Prometheus
       end
 
       private
+
+      def instrument_cpu
+        $cpu_load_gauge.set({ 'load_avg': '1_min' }, Sys::CPU.load_avg.first)
+        $cpu_load_gauge.set({ 'load_avg': '5_min' }, Sys::CPU.load_avg.second)
+        $cpu_load_gauge.set({ 'load_avg': '15_min' }, Sys::CPU.load_avg.third)
+      end
 
       def negotiate(env, formats)
         parse(env.fetch('HTTP_ACCEPT', '*/*')).each do |content_type, _|
