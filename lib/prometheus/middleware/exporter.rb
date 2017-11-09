@@ -2,6 +2,7 @@
 
 require 'prometheus/client'
 require 'prometheus/client/formats/text'
+require 'sys-cpu'
 
 module Prometheus
   module Middleware
