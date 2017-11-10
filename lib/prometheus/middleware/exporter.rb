@@ -44,9 +44,9 @@ module Prometheus
       end
 
       def instrument_cpu
-        @cpu_load_gauge.set({ 'load_avg': '1_min', 'pid': Process.pid }, ::Sys::CPU.load_avg[0])
-        @cpu_load_gauge.set({ 'load_avg': '5_min', 'pid': Process.pid  }, ::Sys::CPU.load_avg[1])
-        @cpu_load_gauge.set({ 'load_avg': '15_min', 'pid': Process.pid  }, ::Sys::CPU.load_avg[2])
+        @cpu_load_gauge.set({ 'load_avg': '1_min' }, ::Sys::CPU.load_avg[0])
+        @cpu_load_gauge.set({ 'load_avg': '5_min' }, ::Sys::CPU.load_avg[1])
+        @cpu_load_gauge.set({ 'load_avg': '15_min' }, ::Sys::CPU.load_avg[2])
       end
 
       def negotiate(env, formats)
